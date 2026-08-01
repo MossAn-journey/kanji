@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>小三漢字ドリル｜小学3年生の漢字200字</title>
+<meta name="description" content="小学3年生で習う漢字200字を、読み・書き・なぞり書きで練習できる無料ドリル。登録不要、記録はブラウザに保存されます。">
+<meta name="theme-color" content="#1F3A5F">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小三漢字ドリル">
+<meta property="og:description" content="小学3年生の漢字200字を、読み・書き・なぞり書きで。登録不要で今すぐ使えます。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="漢字ドリル">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231F3A5F'/%3E%3Ctext x='32' y='47' font-size='42' text-anchor='middle' fill='%23FCFAF2' font-family='serif'%3E漢%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --washi:#FCFAF2;
+  --washi-2:#F3EFE2;
+  --rule:#BDD6DF;
+  --ai:#1F3A5F;
+  --ai-2:#2E5480;
+  --shu:#E0372B;
+  --sumi:#2B2B2B;
+  --wakaba:#6F9F4F;
+  --masu:min(72vw,272px);
+  --gothic:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN W4","Yu Gothic Medium","游ゴシック体","YuGothic","Meiryo",sans-serif;
+  --mincho:"Hiragino Mincho ProN","ヒラギノ明朝 ProN","Yu Mincho","游明朝","YuMincho","MS PMincho",serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--washi);
+  background-image:
+    linear-gradient(var(--washi-2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--washi-2) 1px,transparent 1px);
+  background-size:26px 26px;
+  color:var(--sumi);
+  font-family:var(--gothic);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:env(safe-area-inset-top) 12px calc(16px + env(safe-area-inset-bottom));
+}
+.wrap{width:100%;max-width:460px;display:flex;flex-direction:column;min-height:100vh}
+
+/* ---- ヘッダ ---- */
+header{padding:18px 2px 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+h1{
+  font-family:var(--mincho);
+  font-size:26px;letter-spacing:.22em;margin:0;color:var(--ai);font-weight:600;
+}
+h1 .sub{display:block;font-family:var(--gothic);font-size:10px;letter-spacing:.3em;color:#8A9AA8;margin-top:5px;font-weight:400}
+.gauge{flex:0 0 108px;text-align:right}
+.gauge b{font-size:19px;color:var(--ai);font-family:var(--mincho)}
+.gauge span{font-size:11px;color:#8A9AA8}
+.bar{height:5px;border-radius:3px;background:#E4E0D2;overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;background:var(--wakaba);width:0;transition:width .5s ease}
+
+/* ---- タブ ---- */
+nav{display:flex;gap:6px;margin:4px 0 14px}
+nav button{
+  flex:1;font-family:var(--gothic);font-size:13px;font-weight:600;
+  padding:10px 2px;border:1.5px solid var(--rule);border-radius:11px;
+  background:#fff;color:#5E7488;cursor:pointer;transition:.15s;
+}
+nav button[aria-selected="true"]{background:var(--ai);border-color:var(--ai);color:#fff}
+nav button:focus-visible{outline:3px solid var(--shu);outline-offset:2px}
+
+main{flex:1}
+.panel{display:none}
+.panel.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+
+/* ---- 田字格 ---- */
+.masu-area{position:relative;display:flex;justify-content:center;margin:2px 0 16px}
+.masu{
+  position:relative;width:var(--masu);height:var(--masu);background:#fff;
+  border:2.5px solid var(--ai);border-radius:5px;
+  box-shadow:0 3px 0 rgba(31,58,95,.13);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.masu::before,.masu::after{
+  content:"";position:absolute;background-image:linear-gradient(to right,var(--rule) 52%,transparent 52%);
+  background-size:11px 2px;background-repeat:repeat-x;
+}
+.masu::before{left:0;right:0;top:50%;height:2px;margin-top:-1px}
+.masu::after{top:0;bottom:0;left:50%;width:2px;margin-left:-1px;
+  background-image:linear-gradient(to bottom,var(--rule) 52%,transparent 52%);
+  background-size:2px 11px;background-repeat:repeat-y}
+.masu .glyph{
+  position:relative;font-family:var(--mincho);font-size:calc(var(--masu)*.70);line-height:1;color:var(--sumi);
+  user-select:none;pointer-events:none;
+}
+.masu .glyph.small{font-size:calc(var(--masu)*.39);letter-spacing:.02em}
+.masu .glyph .blank{color:var(--shu);opacity:.55}
+.masu .glyph.tehon{color:#DCD8CB}
+#p-nazori{--masu:min(88vw,364px)}
+#pad{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+
+/* 花丸 */
+#hanamaru{position:absolute;inset:-10px;pointer-events:none;opacity:0}
+#hanamaru path{fill:none;stroke:var(--shu);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+#hanamaru.play{opacity:1}
+#hanamaru.play path{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .6s ease-out forwards}
+#hanamaru.play path.p2{animation-delay:.28s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.shake{animation:shake .34s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+
+/* ---- 問題 ---- */
+.ask{text-align:center;font-size:14px;color:#7C8C99;letter-spacing:.12em;margin:0 0 12px}
+.ask b{color:var(--ai);font-size:19px;letter-spacing:.05em;font-family:var(--mincho)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.choices button{
+  font-family:var(--gothic);font-size:19px;font-weight:600;color:var(--ai);
+  background:#fff;border:2px solid var(--rule);border-radius:13px;
+  padding:16px 4px;cursor:pointer;transition:.12s;box-shadow:0 3px 0 #E1DDCF;
+}
+.choices button.kanji{font-family:var(--mincho);font-size:36px;padding:10px 4px}
+.choices button:active{transform:translateY(3px);box-shadow:none}
+.choices button:focus-visible{outline:3px solid var(--shu);outline-offset:2px}
+.choices button.ok{background:#EAF3E1;border-color:var(--wakaba);color:#3F6B22}
+.choices button.ng{background:#FBE9E7;border-color:var(--shu);color:var(--shu)}
+.choices button:disabled{cursor:default}
+
+.tell{min-height:52px;text-align:center;margin-top:14px;font-size:14px;color:#7C8C99;line-height:1.7}
+.tell b{color:var(--sumi);font-size:17px}
+.tell .y{color:var(--shu)}
+
+/* ---- なぞり ---- */
+.tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.tools button{
+  font-family:var(--gothic);font-size:13px;font-weight:600;padding:10px 18px;
+  border-radius:20px;border:1.5px solid var(--ai);background:#fff;color:var(--ai);cursor:pointer;
+}
+.tools button.solid{background:var(--ai);color:#fff}
+.tools button:focus-visible{outline:3px solid var(--shu);outline-offset:2px}
+.yomi{text-align:center;margin:12px 0;font-size:14px;color:#5E7488;line-height:1.9}
+.yomi .on{color:var(--ai);font-weight:600}
+
+/* ---- 一覧 ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px}
+.grid button{
+  aspect-ratio:1;font-family:var(--mincho);font-size:24px;
+  border:1.5px solid var(--rule);border-radius:8px;background:#fff;color:var(--sumi);cursor:pointer;padding:0;
+}
+.grid button.lv1{background:#F2F7EC}
+.grid button.lv2{background:#E2EFD5;border-color:#B8D3A0}
+.grid button.lv3{background:#CDE5B6;border-color:var(--wakaba);color:#3F6B22}
+.grid button:focus-visible{outline:3px solid var(--shu);outline-offset:1px}
+.detail{
+  background:#fff;border:2px solid var(--ai);border-radius:13px;padding:14px;margin-bottom:12px;
+  display:flex;gap:14px;align-items:center;
+}
+.detail .g{font-family:var(--mincho);font-size:52px;line-height:1;color:var(--ai)}
+.detail .t{font-size:13px;line-height:1.85;color:#5E7488}
+.detail .t b{color:var(--sumi);font-size:15px}
+.mini{font-family:var(--gothic);font-size:12px;font-weight:600;padding:6px 12px;border-radius:14px;
+  border:1.5px solid var(--ai);background:var(--ai);color:#fff;cursor:pointer}
+.mini:focus-visible{outline:3px solid var(--shu);outline-offset:2px}
+
+footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:12px;border-top:1px dashed var(--rule)}
+footer button{background:none;border:none;font-family:var(--gothic);font-size:12px;color:#93A2AE;cursor:pointer;padding:6px}
+footer button:focus-visible{outline:2px solid var(--shu)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#hanamaru.play{opacity:1}#hanamaru.play path{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>小三漢字<span class="sub">200 じ ドリル</span></h1>
+  <div class="gauge"><b id="done">0</b><span> / 200 おぼえた</span><div class="bar"><i id="barfill"></i></div></div>
+</header>
+
+<nav role="tablist">
+  <button role="tab" id="t-yomi" aria-selected="true">よみ</button>
+  <button role="tab" id="t-kanji" aria-selected="false">かんじ</button>
+  <button role="tab" id="t-nazori" aria-selected="false">なぞる</button>
+  <button role="tab" id="t-list" aria-selected="false">いちらん</button>
+</nav>
+
+<main>
+  <!-- よみ / かんじ 共通 -->
+  <section class="panel on" id="p-quiz">
+    <p class="ask" id="askText">よみかたは？</p>
+    <div class="masu-area">
+      <div class="masu" id="masuQ"><span class="glyph small" id="qGlyph">漢字</span>
+        <svg id="hanamaru" viewBox="0 0 100 100"></svg>
+      </div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <p class="tell" id="tell"></p>
+  </section>
+
+  <!-- なぞりがき -->
+  <section class="panel" id="p-nazori">
+    <div class="masu-area">
+      <div class="masu"><span class="glyph tehon" id="tehon">読</span><canvas id="pad"></canvas></div>
+    </div>
+    <p class="yomi" id="nazoriYomi"></p>
+    <div class="tools">
+      <button id="prevPad">◀ まえ</button>
+      <button id="clearPad">けす</button>
+      <button id="tehonBtn">お手本 うすく</button>
+      <button id="nextPad" class="solid">つぎ ▶</button>
+    </div>
+  </section>
+
+  <!-- いちらん -->
+  <section class="panel" id="p-list">
+    <div class="detail" id="detail" hidden><div class="g" id="dg"></div><div class="t" id="dt"></div></div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<footer>
+  <button id="sound">🔔 おと ON</button>
+  <button id="reset">きろくを消す</button>
+</footer>
+</div>
+
+<script>
+/* ===== 小学3年生 配当漢字 200字 =====
+   [漢字, 音よみ, 訓よみ, 熟語, 熟語のよみ] */
+const K=[
+["悪","アク","わるい","悪人","あくにん"],["安","アン","やすい","安心","あんしん"],
+["暗","アン","くらい","暗記","あんき"],["医","イ","","医者","いしゃ"],
+["委","イ","","委員","いいん"],["意","イ","","意見","いけん"],
+["育","イク","そだつ","体育","たいいく"],["員","イン","","店員","てんいん"],
+["院","イン","","入院","にゅういん"],["飲","イン","のむ","飲食","いんしょく"],
+["運","ウン","はこぶ","運動","うんどう"],["泳","エイ","およぐ","水泳","すいえい"],
+["駅","エキ","","駅前","えきまえ"],["央","オウ","","中央","ちゅうおう"],
+["横","オウ","よこ","横道","よこみち"],["屋","オク","や","屋上","おくじょう"],
+["温","オン","あたたかい","温度","おんど"],["化","カ・ケ","ばける","化石","かせき"],
+["荷","カ","に","荷物","にもつ"],["界","カイ","","世界","せかい"],
+["開","カイ","ひらく","開店","かいてん"],["階","カイ","","二階","にかい"],
+["寒","カン","さむい","寒気","さむけ"],["感","カン","","感想","かんそう"],
+["漢","カン","","漢字","かんじ"],["館","カン","やかた","図書館","としょかん"],
+["岸","ガン","きし","海岸","かいがん"],["起","キ","おきる","起立","きりつ"],
+["期","キ","","学期","がっき"],["客","キャク","","客間","きゃくま"],
+["究","キュウ","きわめる","研究","けんきゅう"],["急","キュウ","いそぐ","急行","きゅうこう"],
+["級","キュウ","","学級","がっきゅう"],["宮","キュウ","みや","王宮","おうきゅう"],
+["球","キュウ","たま","野球","やきゅう"],["去","キョ","さる","去年","きょねん"],
+["橋","キョウ","はし","鉄橋","てっきょう"],["業","ギョウ","","作業","さぎょう"],
+["曲","キョク","まがる","曲線","きょくせん"],["局","キョク","","薬局","やっきょく"],
+["銀","ギン","","銀行","ぎんこう"],["区","ク","","地区","ちく"],
+["苦","ク","くるしい","苦手","にがて"],["具","グ","","道具","どうぐ"],
+["君","クン","きみ","君主","くんしゅ"],["係","ケイ","かかり","係員","かかりいん"],
+["軽","ケイ","かるい","軽食","けいしょく"],["血","ケツ","ち","出血","しゅっけつ"],
+["決","ケツ","きめる","決心","けっしん"],["研","ケン","とぐ","研究","けんきゅう"],
+["県","ケン","","県内","けんない"],["庫","コ","","車庫","しゃこ"],
+["湖","コ","みずうみ","湖水","こすい"],["向","コウ","むく","方向","ほうこう"],
+["幸","コウ","しあわせ","幸福","こうふく"],["港","コウ","みなと","空港","くうこう"],
+["号","ゴウ","","番号","ばんごう"],["根","コン","ね","根気","こんき"],
+["祭","サイ","まつり","祭日","さいじつ"],["皿","","さら","大皿","おおざら"],
+["仕","シ","つかえる","仕事","しごと"],["死","シ","しぬ","生死","せいし"],
+["使","シ","つかう","使用","しよう"],["始","シ","はじめる","開始","かいし"],
+["指","シ","ゆび","指先","ゆびさき"],["歯","シ","は","歯科","しか"],
+["詩","シ","","詩人","しじん"],["次","ジ","つぎ","次回","じかい"],
+["事","ジ","こと","大事","だいじ"],["持","ジ","もつ","気持ち","きもち"],
+["式","シキ","","入学式","にゅうがくしき"],["実","ジツ","み","実力","じつりょく"],
+["写","シャ","うつす","写真","しゃしん"],["者","シャ","もの","作者","さくしゃ"],
+["主","シュ","ぬし","主人","しゅじん"],["守","シュ","まもる","留守","るす"],
+["取","シュ","とる","書き取り","かきとり"],["酒","シュ","さけ","酒屋","さかや"],
+["受","ジュ","うける","受信","じゅしん"],["州","シュウ","す","本州","ほんしゅう"],
+["拾","シュウ","ひろう","拾い物","ひろいもの"],["終","シュウ","おわる","終点","しゅうてん"],
+["習","シュウ","ならう","学習","がくしゅう"],["集","シュウ","あつまる","集合","しゅうごう"],
+["住","ジュウ","すむ","住所","じゅうしょ"],["重","ジュウ","おもい","体重","たいじゅう"],
+["宿","シュク","やど","宿題","しゅくだい"],["所","ショ","ところ","場所","ばしょ"],
+["暑","ショ","あつい","暑中","しょちゅう"],["助","ジョ","たすける","助手","じょしゅ"],
+["昭","ショウ","","昭和","しょうわ"],["消","ショウ","きえる","消火","しょうか"],
+["商","ショウ","あきなう","商店","しょうてん"],["章","ショウ","","文章","ぶんしょう"],
+["勝","ショウ","かつ","勝負","しょうぶ"],["乗","ジョウ","のる","乗車","じょうしゃ"],
+["植","ショク","うえる","植物","しょくぶつ"],["申","シン","もうす","申し出","もうしで"],
+["身","シン","み","全身","ぜんしん"],["神","シン・ジン","かみ","神社","じんじゃ"],
+["真","シン","ま","真心","まごころ"],["深","シン","ふかい","深海","しんかい"],
+["進","シン","すすむ","前進","ぜんしん"],["世","セ・セイ","よ","世の中","よのなか"],
+["整","セイ","ととのえる","整理","せいり"],["昔","セキ","むかし","昔話","むかしばなし"],
+["全","ゼン","まったく","全部","ぜんぶ"],["相","ソウ","あい","相手","あいて"],
+["送","ソウ","おくる","放送","ほうそう"],["想","ソウ","","予想","よそう"],
+["息","ソク","いき","休息","きゅうそく"],["速","ソク","はやい","速度","そくど"],
+["族","ゾク","","家族","かぞく"],["他","タ","ほか","他人","たにん"],
+["打","ダ","うつ","打者","だしゃ"],["対","タイ","","対決","たいけつ"],
+["待","タイ","まつ","期待","きたい"],["代","ダイ","かわる","時代","じだい"],
+["第","ダイ","","第一","だいいち"],["題","ダイ","","問題","もんだい"],
+["炭","タン","すみ","木炭","もくたん"],["短","タン","みじかい","短気","たんき"],
+["談","ダン","","相談","そうだん"],["着","チャク","きる","上着","うわぎ"],
+["注","チュウ","そそぐ","注意","ちゅうい"],["柱","チュウ","はしら","電柱","でんちゅう"],
+["丁","チョウ","","丁目","ちょうめ"],["帳","チョウ","","手帳","てちょう"],
+["調","チョウ","しらべる","調子","ちょうし"],["追","ツイ","おう","追加","ついか"],
+["定","テイ","さだめる","予定","よてい"],["庭","テイ","にわ","家庭","かてい"],
+["笛","テキ","ふえ","口笛","くちぶえ"],["鉄","テツ","","鉄道","てつどう"],
+["転","テン","ころぶ","回転","かいてん"],["都","ト・ツ","みやこ","都会","とかい"],
+["度","ド","たび","角度","かくど"],["投","トウ","なげる","投手","とうしゅ"],
+["豆","トウ","まめ","大豆","だいず"],["島","トウ","しま","半島","はんとう"],
+["湯","トウ","ゆ","湯気","ゆげ"],["登","トウ","のぼる","登山","とざん"],
+["等","トウ","ひとしい","平等","びょうどう"],["動","ドウ","うごく","動物","どうぶつ"],
+["童","ドウ","わらべ","童話","どうわ"],["農","ノウ","","農業","のうぎょう"],
+["波","ハ","なみ","電波","でんぱ"],["配","ハイ","くばる","心配","しんぱい"],
+["倍","バイ","","二倍","にばい"],["箱","","はこ","本箱","ほんばこ"],
+["畑","","はたけ","田畑","たはた"],["発","ハツ","","出発","しゅっぱつ"],
+["反","ハン","そる","反対","はんたい"],["坂","ハン","さか","坂道","さかみち"],
+["板","バン","いた","黒板","こくばん"],["皮","ヒ","かわ","毛皮","けがわ"],
+["悲","ヒ","かなしい","悲鳴","ひめい"],["美","ビ","うつくしい","美人","びじん"],
+["鼻","ビ","はな","鼻声","はなごえ"],["筆","ヒツ","ふで","筆記","ひっき"],
+["氷","ヒョウ","こおり","氷山","ひょうざん"],["表","ヒョウ","おもて","発表","はっぴょう"],
+["秒","ビョウ","","一秒","いちびょう"],["病","ビョウ","やまい","病院","びょういん"],
+["品","ヒン","しな","作品","さくひん"],["負","フ","まける","勝負","しょうぶ"],
+["部","ブ","","部分","ぶぶん"],["服","フク","","洋服","ようふく"],
+["福","フク","","幸福","こうふく"],["物","ブツ","もの","品物","しなもの"],
+["平","ヘイ","たいら","平気","へいき"],["返","ヘン","かえす","返事","へんじ"],
+["勉","ベン","","勉強","べんきょう"],["放","ホウ","はなす","放送","ほうそう"],
+["味","ミ","あじ","意味","いみ"],["命","メイ","いのち","生命","せいめい"],
+["面","メン","おもて","場面","ばめん"],["問","モン","とう","質問","しつもん"],
+["役","ヤク","","役目","やくめ"],["薬","ヤク","くすり","薬草","やくそう"],
+["由","ユ・ユウ","よし","理由","りゆう"],["油","ユ","あぶら","石油","せきゆ"],
+["有","ユウ","ある","有名","ゆうめい"],["遊","ユウ","あそぶ","遊園地","ゆうえんち"],
+["予","ヨ","","予定","よてい"],["羊","ヨウ","ひつじ","羊毛","ようもう"],
+["洋","ヨウ","","洋風","ようふう"],["葉","ヨウ","は","落ち葉","おちば"],
+["陽","ヨウ","","太陽","たいよう"],["様","ヨウ","さま","様子","ようす"],
+["落","ラク","おちる","落下","らっか"],["流","リュウ","ながれる","流星","りゅうせい"],
+["旅","リョ","たび","旅行","りょこう"],["両","リョウ","","両手","りょうて"],
+["緑","リョク","みどり","緑色","みどりいろ"],["礼","レイ","","お礼","おれい"],
+["列","レツ","","行列","ぎょうれつ"],["練","レン","ねる","練習","れんしゅう"],
+["路","ロ","じ","道路","どうろ"],["和","ワ","やわらぐ","平和","へいわ"]
+];
+
+/* ===== 状態 ===== */
+let stats={};          // {漢字:{o:正解数, x:まちがい数}}
+let soundOn=true;
+let mode="yomi";       // yomi | kanji
+let cur=null, locked=false;
+let padIdx=0;
+
+const $=id=>document.getElementById(id);
+const rec=k=>stats[k]||(stats[k]={o:0,x:0});
+const mastered=k=>rec(k).o>=3;
+
+/* ===== 保存 =====
+   置き場所によって使える保存先が違うので、順に試す */
+const KEY="kanji3";
+async function readStore(){
+  try{ if(window.storage){const r=await window.storage.get(KEY); if(r&&r.value)return r.value;} }catch(e){}
+  try{ const v=localStorage.getItem(KEY); if(v)return v; }catch(e){}
+  return null;
+}
+async function writeStore(v){
+  let ok=false;
+  try{ if(window.storage){await window.storage.set(KEY,v);ok=true;} }catch(e){}
+  try{ localStorage.setItem(KEY,v);ok=true; }catch(e){}
+  return ok;
+}
+async function load(){
+  const v=await readStore();
+  if(v){ try{const d=JSON.parse(v);stats=d.stats||{};soundOn=d.soundOn!==false;}catch(e){} }
+  paintGauge();paintSound();
+}
+let saveTimer=null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{writeStore(JSON.stringify({stats,soundOn}));},400);
+}
+
+/* ===== 音 ===== */
+let ac=null;
+function beep(good){
+  if(!soundOn)return;
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    const notes=good?[784,1047]:[220,175];
+    notes.forEach((f,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.type=good?"triangle":"sine";o.frequency.value=f;
+      const t=ac.currentTime+i*0.11;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.18,t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+0.22);
+      o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+0.24);
+    });
+  }catch(e){}
+}
+
+/* ===== 出題えらび：にがて優先 ===== */
+function pick(){
+  const scored=K.map(e=>{
+    const r=rec(e[0]);
+    return {e,s:(r.x*4+1)/(r.o+1)+Math.random()*0.9};
+  }).sort((a,b)=>b.s-a.s);
+  return scored[Math.floor(Math.random()*24)].e;
+}
+function others(n,not){
+  const out=[];
+  while(out.length<n){
+    const e=K[Math.floor(Math.random()*K.length)];
+    if(e[0]===not[0]||out.includes(e))continue;
+    out.push(e);
+  }
+  return out;
+}
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+
+/* ===== 出題 ===== */
+function ask(){
+  locked=false;
+  cur=pick();
+  $("tell").innerHTML="";
+  $("hanamaru").classList.remove("play");
+  const [kanji,on,kun,word,yomi]=cur;
+  const box=$("choices");box.innerHTML="";
+
+  if(mode==="yomi"){
+    $("askText").textContent="この ことばの よみかたは？";
+    $("qGlyph").className="glyph small";
+    $("qGlyph").textContent=word;
+    const list=shuffle([cur,...others(3,cur)]);
+    list.forEach(e=>{
+      const b=document.createElement("button");
+      b.textContent=e[4];
+      b.onclick=()=>answer(b,e[0]===kanji,list);
+      box.appendChild(b);
+    });
+  }else{
+    $("askText").innerHTML='□に 入る 漢字は？ <b>'+yomi+'</b>';
+    $("qGlyph").className="glyph small";
+    $("qGlyph").innerHTML=word.split("").map(c=>c===kanji?'<span class="blank">□</span>':c).join("");
+    const list=shuffle([cur,...others(3,cur)]);
+    list.forEach(e=>{
+      const b=document.createElement("button");
+      b.className="kanji";b.textContent=e[0];
+      b.onclick=()=>answer(b,e[0]===kanji,list);
+      box.appendChild(b);
+    });
+  }
+}
+
+function answer(btn,correct,list){
+  if(locked)return;locked=true;
+  const [kanji,on,kun,word,yomi]=cur;
+  const r=rec(kanji);
+  [...$("choices").children].forEach(b=>b.disabled=true);
+
+  if(correct){
+    r.o++;btn.classList.add("ok");beep(true);hanamaru();
+    $("tell").innerHTML='<b>'+word+'</b>（'+yomi+'）　せいかい！';
+  }else{
+    r.x++;btn.classList.add("ng");beep(false);
+    $("masuQ").classList.add("shake");
+    setTimeout(()=>$("masuQ").classList.remove("shake"),360);
+    [...$("choices").children].forEach((b,i)=>{ if(list[i][0]===kanji)b.classList.add("ok"); });
+    $("tell").innerHTML='こたえは <b class="y">'+word+'</b>（'+yomi+'）<br>音：'+(on||"—")+'　訓：'+(kun||"—");
+  }
+  save();paintGauge();
+  setTimeout(ask,correct?1050:2100);
+}
+
+/* ===== 花丸 ===== */
+function hanamaru(){
+  const svg=$("hanamaru");
+  const petal=(R,A,n)=>{
+    let d="";
+    for(let i=0;i<=120;i++){
+      const t=i/120*Math.PI*2, r=R+A*Math.sin(n*t);
+      const x=50+r*Math.cos(t-Math.PI/2), y=50+r*Math.sin(t-Math.PI/2);
+      d+=(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)+" ";
+    }
+    return d+"Z";
+  };
+  svg.innerHTML='<path d="'+petal(41,5,9)+'"/><path class="p2" d="'+petal(29,0,1)+'"/>';
+  svg.style.setProperty("--len","600");
+  svg.classList.remove("play");void svg.offsetWidth;svg.classList.add("play");
+}
+
+/* ===== なぞりがき ===== */
+const pad=$("pad");let ctx=null,drawing=false;
+
+/* 表示サイズと描画バッファをそろえる。書いた線は保ったまま作り直す */
+function setupPad(){
+  const w=pad.clientWidth,h=pad.clientHeight;
+  if(!w||!h)return false;
+  const dpr=window.devicePixelRatio||1;
+  const nw=Math.round(w*dpr),nh=Math.round(h*dpr);
+  if(ctx&&pad.width===nw&&pad.height===nh)return true;
+  let snap=null;
+  if(ctx&&pad.width>0&&pad.height>0){
+    snap=document.createElement("canvas");
+    snap.width=pad.width;snap.height=pad.height;
+    snap.getContext("2d").drawImage(pad,0,0);
+  }
+  pad.width=nw;pad.height=nh;
+  ctx=pad.getContext("2d");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#2B2B2B";
+  ctx.lineWidth=Math.max(7,w*0.052);
+  if(snap)ctx.drawImage(snap,0,0,w,h);
+  return true;
+}
+/* 表示倍率がずれていても指の位置に線が出るよう補正する */
+function pos(e){
+  const r=pad.getBoundingClientRect();
+  return[(e.clientX-r.left)*(pad.clientWidth/r.width),
+         (e.clientY-r.top)*(pad.clientHeight/r.height)];
+}
+pad.addEventListener("pointerdown",e=>{
+  if(!setupPad())return;
+  e.preventDefault();
+  drawing=true;
+  try{pad.setPointerCapture(e.pointerId);}catch(err){}
+  const[x,y]=pos(e);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+0.01,y);ctx.stroke();
+});
+pad.addEventListener("pointermove",e=>{
+  if(!drawing||!ctx)return;
+  e.preventDefault();
+  const[x,y]=pos(e);ctx.lineTo(x,y);ctx.stroke();
+});
+["pointerup","pointercancel"].forEach(t=>pad.addEventListener(t,()=>drawing=false));
+if(window.ResizeObserver)new ResizeObserver(()=>setupPad()).observe(pad);
+window.addEventListener("orientationchange",()=>setTimeout(setupPad,250));
+function clearPad(){if(!setupPad())return;ctx.clearRect(0,0,pad.clientWidth,pad.clientHeight);}
+function showNazori(i){
+  padIdx=(i+K.length)%K.length;
+  const[k,on,kun,word,yomi]=K[padIdx];
+  $("tehon").textContent=k;
+  $("nazoriYomi").innerHTML='<span class="on">音</span> '+(on||"—")+'　<span class="on">訓</span> '+(kun||"—")+'<br>'+word+'（'+yomi+'）';
+  clearPad();
+}
+let tehonLv=1;
+function applyTehon(){
+  $("tehon").style.color=["transparent","#DCD8CB","#AFA99A"][tehonLv];
+  $("tehonBtn").textContent=["お手本 なし","お手本 うすく","お手本 こく"][tehonLv];
+}
+$("tehonBtn").onclick=()=>{tehonLv=(tehonLv+1)%3;applyTehon();};
+$("clearPad").onclick=clearPad;
+$("nextPad").onclick=()=>showNazori(padIdx+1);
+$("prevPad").onclick=()=>showNazori(padIdx-1);
+
+/* ===== いちらん ===== */
+function paintGrid(){
+  const g=$("grid");g.innerHTML="";
+  K.forEach((e,i)=>{
+    const b=document.createElement("button");
+    b.textContent=e[0];
+    const o=rec(e[0]).o;
+    b.className=o>=3?"lv3":o>=2?"lv2":o>=1?"lv1":"";
+    b.onclick=()=>{
+      const r=rec(e[0]);
+      $("dg").textContent=e[0];
+      $("dt").innerHTML='音 '+(e[1]||"—")+'　訓 '+(e[2]||"—")+'<br><b>'+e[3]+'</b>（'+e[4]+'）<br>○'+r.o+'　×'+r.x+
+        ' 　<button class="mini" id="toNazori">この字をなぞる</button>';
+      $("detail").hidden=false;
+      $("toNazori").onclick=()=>{padIdx=i;tab("nazori");};
+    };
+    g.appendChild(b);
+  });
+}
+
+/* ===== 表示更新 ===== */
+function paintGauge(){
+  const n=K.filter(e=>mastered(e[0])).length;
+  $("done").textContent=n;
+  $("barfill").style.width=(n/K.length*100)+"%";
+}
+function paintSound(){$("sound").textContent=soundOn?"🔔 おと ON":"🔕 おと OFF";}
+
+/* ===== タブ ===== */
+function tab(name){
+  ["yomi","kanji","nazori","list"].forEach(n=>$("t-"+n).setAttribute("aria-selected",n===name));
+  $("p-quiz").classList.toggle("on",name==="yomi"||name==="kanji");
+  $("p-nazori").classList.toggle("on",name==="nazori");
+  $("p-list").classList.toggle("on",name==="list");
+  if(name==="yomi"||name==="kanji"){mode=name;ask();}
+  if(name==="nazori"){applyTehon();requestAnimationFrame(()=>{setupPad();showNazori(padIdx);});}
+  if(name==="list"){paintGrid();$("detail").hidden=true;}
+}
+["yomi","kanji","nazori","list"].forEach(n=>$("t-"+n).onclick=()=>tab(n));
+
+$("sound").onclick=()=>{soundOn=!soundOn;paintSound();save();};
+$("reset").onclick=()=>{
+  if(!confirm("これまでの きろくを ぜんぶ 消しますか？"))return;
+  stats={};save();paintGauge();paintGrid();
+};
+
+/* ===== ホーム画面に追加できるようにする ===== */
+(function(){
+  const icon="data:image/svg+xml,"+encodeURIComponent(
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#1F3A5F'/><text x='256' y='376' font-size='340' text-anchor='middle' fill='#FCFAF2' font-family='serif'>漢</text></svg>");
+  const m={name:"小三漢字ドリル",short_name:"漢字ドリル",start_url:".",display:"standalone",
+    background_color:"#FCFAF2",theme_color:"#1F3A5F",
+    icons:[{src:icon,sizes:"512x512",type:"image/svg+xml",purpose:"any"}]};
+  const l=document.createElement("link");
+  l.rel="manifest";
+  l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/json"}));
+  document.head.appendChild(l);
+})();
+
+/* ===== 起動 ===== */
+load().then(()=>{ask();});
+</script>
+</body>
+</html>
